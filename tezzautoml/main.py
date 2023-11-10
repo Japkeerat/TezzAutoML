@@ -2,7 +2,7 @@ from argparse import ArgumentParser, Namespace
 
 import pandas as pd
 
-from automl import AutoML
+from tezzautoml.automl import AutoML
 
 
 def parse_args() -> Namespace:

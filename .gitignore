@@ -50,3 +50,7 @@ Thumbs.db
 
 data/
 mlruns/
+mlartifacts/
+TezzAutoML.egg-info
+build
+model

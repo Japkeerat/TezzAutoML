@@ -6,9 +6,9 @@ import optuna
 import pandas as pd
 from optuna.integration.mlflow import MLflowCallback
 from sklearn.metrics import f1_score, mean_squared_error
-from sklearn.model_selection import StratifiedKFold, KFold
+from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 
-from models import xgboost_model, lgbm_model
+from tezzautoml.models import xgboost_model, lgbm_model
 
 
 class AutoML:
@@ -49,8 +49,19 @@ class AutoML:
             else:
                 return mean_squared_error(y_val, y_pred), model
 
+    def train_test_split(self, model):
+        X_train, X_val, y_train, y_val = train_test_split(
+            self.X, self.y, test_size=0.2, random_state=42
+        )
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_val)
+        if self.task == "classification":
+            return f1_score(y_val, y_pred), model
+        else:
+            return mean_squared_error(y_val, y_pred), model
+
     def save_model(self, model, algorithm="XGBoost"):
-        model_dir = "model"
+        model_dir = "../model"
         os.makedirs(model_dir, exist_ok=True)
         if algorithm == "XGBoost":
             file_name = os.path.join(model_dir, "model.xgb")
@@ -74,11 +85,14 @@ class AutoML:
             elif algo_to_use == "LightGBM":
                 model = lgbm_model(trial, self.task)
             metric = list()
-            if self.task == "classification":
-                kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+            if self.fast_mode:
+                score, model = self.train_test_split(model)
             else:
-                kfold = KFold(n_splits=5, shuffle=True, random_state=42)
-            score, model = self.kfold_cv(model, kfold)
+                if self.task == "classification":
+                    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+                else:
+                    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+                score, model = self.kfold_cv(model, kfold)
             metric.append(score)
             file_name = self.save_model(model, algo_to_use)
             mlflow.log_artifact(file_name)

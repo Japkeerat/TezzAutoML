@@ -1,7 +1,8 @@
 # TezzAutoML
 
-This allows to find the best model for the tabular datasets.
+Just focus on the data, TezzAutoML will do the rest.
 
-_At the moment, it doesn't support preprocessing or feature engineering. It is planned to add this functionality in the future._
+You'll need to do all the preprocessing with the data the way you want.
 
+This library just implements and tries all the machine learning algorithms for you along with optuna hyperparameter tuning.
 
