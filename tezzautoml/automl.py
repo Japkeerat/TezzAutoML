@@ -21,6 +21,7 @@ class AutoML:
         task: str = "classification",
         mlflow_experiment_name: str = "automl",
         fast_mode: bool = False,
+        tracking_uri: str = "http://127.0.0.1:8080",
     ):
         self.best_model = None
         self.train_data = train_data
@@ -32,12 +33,13 @@ class AutoML:
         self.y = self.train_data[self.target]
         self.mlflow_experiment_name = mlflow_experiment_name
         self.fast_mode = fast_mode
+        self.tracking_uri = tracking_uri
         self.mlflow_callback = MLflowCallback(
-            tracking_uri="http://127.0.0.1:8080",
+            tracking_uri=self.tracking_uri,
             metric_name="f1_score" if self.task == "classification" else "mse",
             create_experiment=True,
         )
-        mlflow.set_tracking_uri("http://127.0.0.1:8080")
+        mlflow.set_tracking_uri(self.tracking_uri)
 
     def kfold_cv(self, model, kfold):
         for train_index, val_index in kfold.split(self.X, self.y):
