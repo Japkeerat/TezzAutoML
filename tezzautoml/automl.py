@@ -22,6 +22,7 @@ class AutoML:
         mlflow_experiment_name: str = "automl",
         fast_mode: bool = False,
     ):
+        self.best_model = None
         self.train_data = train_data
         self.target = target
         self.log = log
@@ -95,6 +96,7 @@ class AutoML:
                 score, model = self.kfold_cv(model, kfold)
             metric.append(score)
             file_name = self.save_model(model, algo_to_use)
+            trial.set_user_attr('model', model)
             mlflow.log_artifact(file_name)
             return sum(metric) / len(metric)
 
@@ -105,3 +107,13 @@ class AutoML:
             + str(datetime.now()),
         )
         study.optimize(_objective, n_trials=self.n_trials, callbacks=[mlfc])
+        self.best_model = study.best_trial.user_attrs['model']
+
+    def predict(self, X):
+        """
+        Make predictions using the best model.
+
+        :param X: DataFrame or array-like, features for making predictions
+        :return: Predicted values
+        """
+        return self.best_model.predict(X)
