@@ -13,6 +13,7 @@ setup(
     version="0.1.5",
     description="Just another AutoML library, but better and faster.",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author="Japkeerat Singh",
     author_email="japkeerat21@gmail.com",
     packages=find_packages(),
@@ -27,7 +28,7 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "License :: OSI Approved :: CC0 License",
+        "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
         "Programming Language :: Python :: 3.11",
     ]
 )
