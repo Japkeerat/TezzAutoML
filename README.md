@@ -19,5 +19,7 @@ tasks.
 
 When Fast Mode is True, it will use train_test_split for both the tasks.
 
+NOTE: Will be writing complete documentation when 0.2 version is ready. Please wait for the version as this version is still in development with multiple release daily.
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
